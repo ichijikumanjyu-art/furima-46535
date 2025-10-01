@@ -2,16 +2,16 @@
 
 ## usersテーブル
 
-|Column         |Type  |Options              |
-|---------------|------|---------------------|
-|nickname       |string|NOT NULL             |
-|email          |string|NOT NULL,unique: true|
-|passward       |string|NOT NULL             |
-|last_name      |string|NOT NULL             |
-|first_name     |string|NOT NULL             | 
-|last_name_kana |string|NOT NULL             |
-|first_name_kana|string|NOT NULL             |
-|birth          |date  |NOT NULL             |
+|Column            |Type  |Options              |
+|------------------|------|---------------------|
+|nickname          |string|NOT NULL             |
+|email             |string|NOT NULL,unique: true|
+|encrypted_password|string|NOT NULL             |
+|last_name         |string|NOT NULL             |
+|first_name        |string|NOT NULL             | 
+|last_name_kana    |string|NOT NULL             |
+|first_name_kana   |string|NOT NULL             |
+|birth             |date  |NOT NULL             |
 
 ### Association
 - has_many :items
@@ -20,17 +20,17 @@
 
 ## itemsテーブル
 
-|Colimn           |Type       |Options                   |
-|-----------------|-----------|--------------------------|
-|product          |string     |NOT NULL                  |
-|introduce        |text       |NOT NULL                  |
-|price            |string     |NOT NULL                  |
-|user             |references |NOT NULL,foreign_key: true|
-|category_id      |integer    |NOT NULL                  |
-|condition_id     |integer    |NOT NULL                  |
-|shipping_costs_id|integer    |NOT NULL                  |
-|prefecture_id    |integer    |NOT NULL                  |
-|shipping_date_id |integer    |NOT NULL                  |
+|Column           |Type       |Options                      |
+|-----------------|-----------|-----------------------------|
+|product          |string     |null: false                  |
+|introduce        |text       |null: false                  |
+|price            |integer    |null: false                  |
+|user             |references |null: false,foreign_key: true|
+|category_id      |integer    |null: false                  |
+|condition_id     |integer    |null: false                  |
+|shipping_costs_id|integer    |null: false                  |
+|prefecture_id    |integer    |null: false                  |
+|shipping_date_id |integer    |null: false                  |
 
 
 ### Association
@@ -38,12 +38,12 @@
 - has_one :order
 
 
-## odersテーブル
+## ordersテーブル
 
-|Colmun    |Type      |Options                   |
-|----------|----------|--------------------------|
-|user      |references|NOT NULL,foreign_key: true|
-|item      |references|NOT NULL,foreign_key: true|
+|Colmun    |Type      |Options                      |
+|----------|----------|-----------------------------|
+|user      |references|null: false,foreign_key: true|
+|item      |references|null: false,foreign_key: true|
 
 ### Association
 - belongs_to :user
@@ -51,16 +51,16 @@
 - has_one :address
 
 
-## addressテーブル
+## addressesテーブル
 
-|Colmun       |Type  |Options |
-|-------------|------|--------|
-|post_code    |string|NOT NULL|
-|prefecture_id|integer|NOT NULL|
-|city         |string|NOT NULL|
-|street       |string|NOT NULL|
-|building     |string|        |
-|phone_number |string|NOT NULL|
+|Colmun       |Type   |Options    |
+|-------------|-------|-----------|
+|post_code    |string |null: false|
+|prefecture_id|integer|null: false|
+|city         |string |null: false|
+|street       |string |null: false|
+|building     |string |           |
+|phone_number |string |null: false|
 
 ### Association
 - belongs_to :oder
