@@ -4,11 +4,9 @@ class ItemsController < ApplicationController
   end
 
   def new
+    @user = user.new
   end
 
-  private
-  def tweet_params
-    params.require(:tweet).permit(:name, :image, :text)
-  end
+  
 
 end
