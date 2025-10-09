@@ -9,6 +9,18 @@ class ItemsController < ApplicationController
     @item = Item.new
   end
 
+  def create
+    @item = Item.new(item_params)
+    @item.user = current_user  # ログインユーザーと紐づけ
+
+    if @item.save
+      redirect_to root_path, notice: '商品を出品しました'
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+
   private
 
   def item_params

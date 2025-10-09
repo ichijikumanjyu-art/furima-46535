@@ -27,6 +27,10 @@ class Item < ApplicationRecord
     validates :shipping_date_id
   end
 
+  # 半角数値チェック（整数のみ）
+  validates_format_of :price, with: /\A[0-9]+\z/, message: 'は半角数字で入力してください'
+
+
   # 価格のバリデーション（範囲・数値）
   validates :price, numericality: {
     only_integer: true,
@@ -34,8 +38,4 @@ class Item < ApplicationRecord
     less_than_or_equal_to: 9_999_999,
     message: 'は¥300〜¥9,999,999の範囲で入力してください'
   }
-
-  # 半角数値チェック（整数のみ）
-  validates_format_of :price, with: /\A[0-9]+\z/, message: 'は半角数字で入力してください'
 end
-
