@@ -6,14 +6,7 @@ RSpec.describe Item, type: :model do
   end
 
   describe '商品出品機能' do
-    before do
-      @item = FactoryBot.build(:item)
-      @item.image.attach(
-        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_image.png')),
-        filename: 'test_image.png',
-        content_type: 'image/png'
-      )
-    end
+ 
     context '出品できるとき' do
       it 'すべての項目が正しく入力されていれば出品できる' do
         expect(@item).to be_valid

@@ -1,25 +1,34 @@
-import { Controller } from "@hotwired/stimulus"
+const price = () => {
+  const priceInput = document.getElementById("item-price");
+  const taxDisplay = document.getElementById("add-tax-price");
+  const profitDisplay = document.getElementById("profit");
 
-export default class extends Controller {
-  static targets = ["price", "tax", "profit"]
+  if (!priceInput) return;
 
-  connect() {
-
-  }
-
-  calculate() {
-    const inputValue = parseInt(this.priceTarget.value)
+  priceInput.addEventListener("input", () => {
+    const inputValue = parseInt(priceInput.value);
 
     if (isNaN(inputValue) || inputValue < 1) {
-      this.taxTarget.textContent = ""
-      this.profitTarget.textContent = ""
-      return
+      taxDisplay.textContent = "";
+      profitDisplay.textContent = "";
+      return;
     }
 
-    const tax = Math.floor(inputValue * 0.1)
-    const profit = inputValue - tax
+    const tax = Math.floor(inputValue * 0.1);
+    const profit = inputValue - tax;
 
-    this.taxTarget.textContent = tax.toLocaleString()
-    this.profitTarget.textContent = profit.toLocaleString()
+    taxDisplay.textContent = tax.toLocaleString();
+    profitDisplay.textContent = profit.toLocaleString();
+  });
+
+  const initialValue = parseInt(priceInput.value);
+  if (!isNaN(initialValue)) {
+    const tax = Math.floor(initialValue * 0.1);
+    const profit = initialValue - tax;
+    taxDisplay.textContent = tax.toLocaleString();
+    profitDisplay.textContent = profit.toLocaleString();
   }
-}
+};
+
+window.addEventListener("turbo:load", price);
+window.addEventListener("turbo:render", price);
