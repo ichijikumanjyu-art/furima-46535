@@ -12,7 +12,7 @@ class ItemsController < ApplicationController
 
   def create
     @item = Item.new(item_params)
-    @item.user = current_user  # ログインユーザーと紐づけ
+    @item.user = current_user # ログインユーザーと紐づけ
 
     if @item.save
       redirect_to root_path, notice: '商品を出品しました'
@@ -20,7 +20,6 @@ class ItemsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-
 
   private
 
@@ -37,5 +36,4 @@ class ItemsController < ApplicationController
       :image
     ).merge(user_id: current_user.id)
   end
-
 end
