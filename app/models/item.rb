@@ -10,6 +10,12 @@ class Item < ApplicationRecord
 
   has_one_attached :image
 
+  # has_one :order
+
+  # def sold_out?
+  # order.present?
+  # end
+
   # 商品画像が必須
   validates :image, presence: { message: 'を添付してください' }
 
@@ -29,7 +35,6 @@ class Item < ApplicationRecord
 
   # 半角数値チェック（整数のみ）
   validates_format_of :price, with: /\A[0-9]+\z/, message: 'は半角数字で入力してください'
-
 
   # 価格のバリデーション（範囲・数値）
   validates :price, numericality: {

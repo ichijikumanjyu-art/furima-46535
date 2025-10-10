@@ -6,7 +6,6 @@ RSpec.describe Item, type: :model do
   end
 
   describe '商品出品機能' do
- 
     context '出品できるとき' do
       it 'すべての項目が正しく入力されていれば出品できる' do
         expect(@item).to be_valid
@@ -84,7 +83,7 @@ RSpec.describe Item, type: :model do
         @item.price = '５００'
         @item.valid?
         expect(@item.errors.full_messages).to include('Price は¥300〜¥9,999,999の範囲で入力してください')
-      end      
+      end
 
       it '価格が文字混在では出品できない（例: 1000yen）' do
         @item.price = '1000yen'
