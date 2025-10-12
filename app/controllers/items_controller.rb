@@ -24,19 +24,12 @@ class ItemsController < ApplicationController
   end
 
   def show
-    @item = Item.find(params[:id])
   end
 
   def edit
-    @item = Item.find(params[:id])
   end
   
   def update
-    @item = Item.find(params[:id])
-    unless @item.user == current_user && @item.order.nil?
-      redirect_to root_path and return
-    end
-  
     if @item.update(item_params)
       redirect_to item_path(@item)
     else
@@ -45,7 +38,7 @@ class ItemsController < ApplicationController
   end
 
   private
-  
+
   def set_item
     @item = Item.find(params[:id])
   end
