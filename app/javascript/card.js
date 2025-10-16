@@ -26,15 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("トークン生成成功");
         const token = response.id;
 
-        // トークンをフォームに追加して送信
-        const form = document.getElementById("charge-form");
-        const hiddenInput = document.createElement("input");
-        hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", "token");
-        hiddenInput.setAttribute("value", token);
-        form.appendChild(hiddenInput);
+        
+        const tokenField = document.getElementById("card-token"); 
+        tokenField.value = token;
 
-        form.submit(); // トークン付きでフォーム送信
+      
+        const form = document.getElementById("charge-form");
+        form.submit();
       }
     });
   });
