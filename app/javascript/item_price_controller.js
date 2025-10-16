@@ -30,5 +30,11 @@ const price = () => {
   }
 };
 
-window.addEventListener("turbo:load", price);
-window.addEventListener("turbo:render", price);
+
+
+window.addEventListener("turbo:load", () => {
+  price();
+});
+window.addEventListener("turbo:render", () => {
+  price();
+});

@@ -12,9 +12,9 @@ class Item < ApplicationRecord
 
   has_one :order
 
-  # def sold_out?
-  # order.present?
-  # end
+   def sold_out?
+    order.present?
+   end
 
   # 商品画像が必須
   validates :image, presence: { message: 'を添付してください' }
