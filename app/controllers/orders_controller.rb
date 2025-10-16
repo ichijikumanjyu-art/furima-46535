@@ -32,8 +32,6 @@ class OrdersController < ApplicationController
       :building,
       :phone_number,
       :token,
-      :user_id,
-      :item_id
     ).merge(user_id: current_user.id, item_id: @item.id)
   end
 
