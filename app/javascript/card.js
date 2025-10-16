@@ -1,7 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const publicKey = gon.public_key
-  const payjp = Payjp(publicKey) // PAY.JPテスト公開鍵
+const pay = () => {
+  const publicKey = gon.public_key;
+  if (!publicKey || typeof Payjp === 'undefined') {
+    return;
+  }
+  const payjp = Payjp(publicKey); // PAY.JPテスト公開鍵
   const elements = payjp.elements();
+
+  const numberForm = document.getElementById('number-form');
+  if (!numberForm) {
+      return; 
+  }
 
   const numberElement = elements.create('cardNumber');
   numberElement.mount('#number-form');
@@ -21,9 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     payjp.createToken(numberElement).then((response) => {
       if (response.error) {
         alert("カード情報が正しくありません");
-        console.log(response.error.message);
       } else {
-        console.log("トークン生成成功");
         const token = response.id;
 
         
@@ -37,3 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+window.addEventListener("turbo:load", pay);
+window.addEventListener("turbo:render", pay);
