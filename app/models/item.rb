@@ -17,12 +17,12 @@ class Item < ApplicationRecord
    end
 
   # 商品画像が必須
-  validates :image, presence: { message: 'を添付してください' }
+  validates :image, presence: { message: "can't be blank" }
 
   # 商品名・説明・価格が必須
-  validates :product, presence: true
-  validates :introduce, presence: true
-  validates :price, presence: true
+  validates :product, presence: { message: "can't be blank" }
+  validates :introduce, presence: { message: "can't be blank" }
+  validates :price, presence: { message: "can't be blank" }
 
   # ActiveHashで「---（id: 1）」以外を選択必須とする
   with_options numericality: { other_than: 1, message: "can't be blank" } do
