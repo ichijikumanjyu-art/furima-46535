@@ -1,47 +1,73 @@
 const pay = () => {
-  const publicKey = gon.public_key;
-  if (!publicKey || typeof Payjp === 'undefined') {
-    return;
-  }
-  const payjp = Payjp(publicKey); // PAY.JPテスト公開鍵
-  const elements = payjp.elements();
-
   const numberForm = document.getElementById('number-form');
   if (!numberForm) {
-      return; 
+    return;
+  }
+  if (numberForm.dataset.mounted === 'true') {
+    return;
   }
 
-  const numberElement = elements.create('cardNumber');
-  numberElement.mount('#number-form');
+  let publicKey = typeof gon !== 'undefined' ? gon.public_key : null;
+  if (!publicKey) {
+    const meta = document.querySelector('meta[name="payjp-public-key"]');
+    publicKey = meta && meta.content;
+  }
+  if (!publicKey || typeof Payjp === 'undefined') {
+    console.debug('[card.js] Skip init: missing publicKey or Payjp');
+    return;
+  }
 
-  const expiryElement = elements.create('cardExpiry');
-  expiryElement.mount('#expiry-form');
+  const payjp = Payjp(publicKey);
+  const elements = payjp.elements();
 
-  const cvcElement = elements.create('cardCvc');
-  cvcElement.mount('#cvc-form');
+  let numberElement, expiryElement, cvcElement;
+  try {
+    numberElement = elements.create('cardNumber');
+    numberElement.mount('#number-form');
+    console.debug('[card.js] Mounted cardNumber');
+  } catch (e) {
+    console.error('[card.js] Failed to mount cardNumber', e);
+    return;
+  }
 
-  const submit = document.getElementById("button");
+  try {
+    expiryElement = elements.create('cardExpiry');
+    expiryElement.mount('#expiry-form');
+    console.debug('[card.js] Mounted cardExpiry');
+  } catch (e) {
+    console.error('[card.js] Failed to mount cardExpiry', e);
+  }
+
+  try {
+    cvcElement = elements.create('cardCvc');
+    cvcElement.mount('#cvc-form');
+    console.debug('[card.js] Mounted cardCvc');
+  } catch (e) {
+    console.error('[card.js] Failed to mount cardCvc', e);
+  }
+
+  // マウント済みフラグ（Turbo再描画時の二重マウント防止）
+  numberForm.dataset.mounted = 'true';
+
+  const submit = document.getElementById('button');
   if (!submit) return;
 
-  submit.addEventListener("click", (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-
     payjp.createToken(numberElement).then((response) => {
       if (response.error) {
-        alert("カード情報が正しくありません");
+        alert('カード情報が正しくありません');
       } else {
         const token = response.id;
-
-        
-        const tokenField = document.getElementById("card-token"); 
+        const tokenField = document.getElementById('card-token');
         tokenField.value = token;
-
-      
-        const form = document.getElementById("charge-form");
+        const form = document.getElementById('charge-form');
         form.submit();
       }
     });
-  });
+  };
+
+  submit.addEventListener('click', onSubmit, { once: true });
 };
 
 window.addEventListener("turbo:load", pay);
