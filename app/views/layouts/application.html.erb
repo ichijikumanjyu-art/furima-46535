@@ -4,10 +4,9 @@
 <head>
   <title>Furima</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="payjp-public-key" content="<%= Rails.application.credentials.dig(:payjp, :public_key) || ENV['PAYJP_PUBLIC_KEY'] %>">
+  <meta name="payjp-public-key" content="<%= ENV['PAYJP_PUBLIC_KEY'] %>">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
-  <%= include_gon nonce: content_security_policy_nonce %>
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <script src="https://js.pay.jp/v2/pay.js"></script>
   <%= javascript_importmap_tags nonce: true %>
