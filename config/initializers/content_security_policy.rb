@@ -11,7 +11,7 @@ Rails.application.configure do
     policy.img_src     :self, :https, :data
     policy.object_src  :none
     policy.script_src  :self, :https, 'https://js.pay.jp'
-    policy.style_src   :self, :https
+    policy.style_src   :self, :https, :unsafe_inline
     policy.frame_src   :self, 'https://js.pay.jp'
     policy.connect_src :self, :https, 'https://api.pay.jp'
     # Specify URI for violation reports
