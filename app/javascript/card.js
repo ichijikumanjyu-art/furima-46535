@@ -52,11 +52,28 @@ const pay = () => {
   const submit = document.getElementById('button');
   if (!submit) return;
 
+  const errorBox = document.getElementById('card-errors');
+  const setError = (message) => {
+    if (errorBox) {
+      errorBox.textContent = message || 'カード情報が正しくありません';
+      errorBox.style.display = 'block';
+    }
+  };
+  const clearError = () => {
+    if (errorBox) {
+      errorBox.textContent = '';
+      errorBox.style.display = 'none';
+    }
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
+    clearError();
+    submit.disabled = true;
     payjp.createToken(numberElement).then((response) => {
       if (response.error) {
-        alert('カード情報が正しくありません');
+        setError(response.error.message);
+        submit.disabled = false;
       } else {
         const token = response.id;
         const tokenField = document.getElementById('card-token');
@@ -64,10 +81,14 @@ const pay = () => {
         const form = document.getElementById('charge-form');
         form.submit();
       }
+    }).catch((err) => {
+      setError('通信エラーが発生しました。時間をおいて再度お試しください。');
+      console.error('[card.js] createToken failed', err);
+      submit.disabled = false;
     });
   };
 
-  submit.addEventListener('click', onSubmit, { once: true });
+  submit.addEventListener('click', onSubmit);
 };
 
 window.addEventListener("turbo:load", pay);
