@@ -2,6 +2,7 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_item
   before_action :redirect_if_ordered_or_mine
+  around_action :with_english_locale
 
   def index
     gon.public_key = ENV['PAYJP_PUBLIC_KEY'] || Rails.application.credentials.dig(:payjp, :public_key)
@@ -22,6 +23,10 @@ class OrdersController < ApplicationController
   end
 
   private
+
+  def with_english_locale(&action)
+    I18n.with_locale(:en, &action)
+  end
 
   def order_address_params
     params.require(:order_address).permit(

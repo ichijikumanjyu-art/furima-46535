@@ -17,6 +17,9 @@
         </div>
       </div>
     </div>
+    <div id="errors-anchor">
+      <%= render "shared/error_messages", model: @order_address %>
+    </div>
     <%# /購入内容の表示 %>
 
     <%# 支払額の表示 %>
@@ -29,7 +32,6 @@
       </p>
     </div>
     <%# /支払額の表示 %>
-    <%= render "shared/error_messages", model: @order_address %>
     <%= form_with model: @order_address, url: item_orders_path(@item), id: 'charge-form', class: 'transaction-form-wrap', local: true, data: { turbo: false } do |f| %>
     <%# カード情報の入力 %>
     <div class='credit-card-form'>
@@ -67,7 +69,7 @@
       </div>
     </div>
     <%# /カード情報の入力 %>
-    <div id="card-errors" class="card-errors"></div>
+    
     
     <%# 配送先の入力 %>
     <div class='shipping-address-form'>
@@ -119,6 +121,7 @@
     </div>
     <%# /配送先の入力 %>
     <%= f.hidden_field :token, id: 'card-token' %>
+    <%= f.hidden_field :card_error, id: 'card-error' %>
     <div class='buy-btn'>
       <%= f.submit "購入" ,class:"buy-red-btn", id:"button" %>
     </div>

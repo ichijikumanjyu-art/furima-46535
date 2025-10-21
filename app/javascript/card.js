@@ -52,18 +52,50 @@ const pay = () => {
   const submit = document.getElementById('button');
   if (!submit) return;
 
-  const errorBox = document.getElementById('card-errors');
-  const setError = (message) => {
-    if (errorBox) {
-      errorBox.textContent = message || 'カード情報が正しくありません';
-      errorBox.style.display = 'block';
+  // 画像直下（#errors-anchor）に共有エラーブロックを設置（存在しなければ作成）
+  const ensureSharedErrorBox = () => {
+    let alertBox = document.querySelector('#errors-anchor .error-alert') || document.querySelector('.error-alert');
+    if (!alertBox) {
+      const anchor = document.getElementById('errors-anchor');
+      alertBox = document.createElement('div');
+      alertBox.className = 'error-alert';
+      const ul = document.createElement('ul');
+      alertBox.appendChild(ul);
+      if (anchor) {
+        anchor.innerHTML = '';
+        anchor.appendChild(alertBox);
+      } else {
+        const form = document.getElementById('charge-form');
+        if (!form || !form.parentNode) return null;
+        form.parentNode.insertBefore(alertBox, form);
+      }
     }
+    if (!alertBox.querySelector('ul')) {
+      const ul = document.createElement('ul');
+      alertBox.appendChild(ul);
+    }
+    return alertBox;
   };
+
+  const setError = (message) => {
+    const alertBox = ensureSharedErrorBox();
+    if (!alertBox) return;
+    const ul = alertBox.querySelector('ul');
+    ul.innerHTML = '';
+    const li = document.createElement('li');
+    li.className = 'error-message';
+    li.textContent = message || 'カード情報が正しくありません';
+    ul.appendChild(li);
+    alertBox.classList.add('is-visible');
+    try { window.scrollTo({ top: Math.max(alertBox.offsetTop - 80, 0), behavior: 'smooth' }); } catch (e) {}
+  };
+
   const clearError = () => {
-    if (errorBox) {
-      errorBox.textContent = '';
-      errorBox.style.display = 'none';
-    }
+    const alertBox = document.querySelector('.error-alert');
+    if (!alertBox) return;
+    const ul = alertBox.querySelector('ul');
+    if (ul) ul.innerHTML = '';
+    alertBox.classList.remove('is-visible');
   };
 
   const onSubmit = (e) => {
@@ -72,8 +104,13 @@ const pay = () => {
     submit.disabled = true;
     payjp.createToken(numberElement).then((response) => {
       if (response.error) {
-        setError(response.error.message);
-        submit.disabled = false;
+        // サーバ側のエラーレンダリングに統合するため、hiddenに格納してフォーム送信
+        const cardErrorField = document.getElementById('card-error');
+        if (cardErrorField) {
+          cardErrorField.value = response.error.message || 'Card error';
+        }
+        const form = document.getElementById('charge-form');
+        form.submit();
       } else {
         const token = response.id;
         const tokenField = document.getElementById('card-token');
@@ -82,9 +119,12 @@ const pay = () => {
         form.submit();
       }
     }).catch((err) => {
-      setError('通信エラーが発生しました。時間をおいて再度お試しください。');
-      console.error('[card.js] createToken failed', err);
-      submit.disabled = false;
+      const cardErrorField = document.getElementById('card-error');
+      if (cardErrorField) {
+        cardErrorField.value = 'Network error. Please try again.';
+      }
+      const form = document.getElementById('charge-form');
+      form.submit();
     });
   };
 
