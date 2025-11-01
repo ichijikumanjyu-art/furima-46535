@@ -8,6 +8,9 @@ gem 'rails', '~> 7.1.0'
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
 
+# NokogiriのGLIBCエラー対策として、プラットフォームを強制的に :ruby に設定
+gem 'nokogiri', '~> 1.18', platforms: :ruby
+
 # Use mysql as the database for Active Record
 gem 'mysql2', '~> 0.5'
 
