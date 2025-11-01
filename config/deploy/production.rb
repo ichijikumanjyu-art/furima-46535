@@ -60,3 +60,18 @@
 #     # password: "please use keys"
 #   }
 server '54.150.205.91', user: 'ec2-user', roles: %w{app db web}
+
+# Nokogiri glibc のバージョン不一致エラー（GLIBC_2.28 not found）の解決策
+# bundler:install の前に実行するタスクを定義
+before 'bundler:install', 'bundler:set_force_ruby_platform'
+
+namespace :bundler do
+  desc 'Set bundle config force_ruby_platform to true to resolve Nokogiri glibc mismatch'
+  task :set_force_ruby_platform do
+    on roles(:all) do
+      # --global を使用して、リモートサーバーのec2-userのBundler設定を変更
+      # これにより、Nokogiriがソースコードからコンパイルされる
+      execute :bundle, 'config', '--global', 'force_ruby_platform', 'true'
+    end
+  end
+end
